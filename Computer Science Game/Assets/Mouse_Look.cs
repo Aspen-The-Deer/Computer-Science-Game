@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// ^ Default unity functionality requirements
 
-public class Mouse_Look : MonoBehaviour
+public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' which will be applied to the player controller
 {
     public float mouseSensitivity = 100f;  // Defines a public variable which represents the sensitivity of the mouse
 
