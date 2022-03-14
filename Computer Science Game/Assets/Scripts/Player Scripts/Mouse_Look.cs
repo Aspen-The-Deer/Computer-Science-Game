@@ -20,7 +20,7 @@ public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' 
     // Update is called once per frame
     void Update()
     {
-       
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime; // Defines mouse input for Left and Right, and the speed at which it has moved
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime; // Defines mouse input for Up and Down, and the speed at which it has moved
         // Time.deltaTime is a function that calls the change in time since the last frame.
