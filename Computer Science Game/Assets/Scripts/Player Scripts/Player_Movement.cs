@@ -9,6 +9,7 @@ public class Player_Movement : MonoBehaviour
     public float speed = 12f;
     public float gravity = -9.81f;
     public float jumpHeight = 2f;
+    public int jumpsRemaining = 1;
 
     public Transform groundCheck;
     public float groundDistance = 0.5f;
@@ -35,9 +36,15 @@ public class Player_Movement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && onFloor)
+        if(Input.GetButtonDown("Jump") && (jumpsRemaining > 0))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            jumpsRemaining -= 1;
+        }
+
+        if(onFloor)
+        {
+            jumpsRemaining = 1;
         }
 
         velocity.y += gravity * Time.deltaTime;
