@@ -12,17 +12,17 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     public float jumpHeight = 2f; // Creating a public float that defines the height at which the player can jump
     public int jumpsRemaining = 1; // Creating a public integer that defines the number of times the player is able to jump before returning to the ground 
 
-    public Transform groundCheck;
-    public float groundDistance = 0.5f;
-    public LayerMask groundMask;
+    public Transform groundCheck; // Creates a transformation that can be defined as an in game object used for ground checking
+    public float groundDistance = 0.5f; // Defines a radius around the ground check object to see when the player is close to or on the ground
+    public LayerMask groundMask; // Defines a layer mask that will be an identifier for ground objects
 
-    public Transform wallL;
-    public Transform wallR;
-    public float wallDistance = 0.5f;
-    public LayerMask wallMask;
+    public Transform wallL; // Creates a transformation that can be defined as an in game object used for checking for a wall on the left side of the player
+    public Transform wallR; // Creates a transformation that can be defined as an in game object used for checking for a wall on the right side of the player
+    public float wallDistance = 0.5f; // Defines a radius around the ground check object to see when the player is close to or on a wall
+    public LayerMask wallMask; // Defines a layer mask that will be an identifier for wall objects
 
-    Vector3 velocity;
-    bool onFloor;
+    Vector3 velocity; // Defines a vector movement that connects to the velocity of the player
+    bool onFloor; // Defines a boolean that indicates if the player is touching the ground
     bool onWallA;
     bool onWallB;
 
