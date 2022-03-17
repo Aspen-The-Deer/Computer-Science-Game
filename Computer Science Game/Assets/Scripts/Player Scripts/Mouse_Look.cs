@@ -20,9 +20,9 @@ public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' 
     bool onWallA; // Defines a boolean that indicates if the player is touching the wall
     bool onWallB; // Defines a boolean that indicates if the player is touching the wall
 
-    float maxRotationL = -10f;
-    float maxRotationR = 10f;
-    float rotationIncrament = 0.0625f;
+    float maxRotationL = -10f; // Defines the max rotation angle when on a left handed wallrun
+    float maxRotationR = 10f; // Defines the max rotation angle when on a left handed wallrun
+    float rotationIncrament = 0.0625f; // Defines the incrament value at which the camera will rotate
     bool onWall;
 
     // Start is called before the first frame update
@@ -43,43 +43,43 @@ public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' 
         xRotation -= mouseY; // -= mouseY to give correct rotation (Not inverted)
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Locks the camera movement on the Y axis to a 180 degree span
 
-        onWallA = Physics.CheckSphere(wallL.position, wallDistance, wallMask);
-        onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask);
+        onWallA = Physics.CheckSphere(wallL.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
+        onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
 
-        if(onWallA | onWallB)
+        if(onWallA | onWallB) // If wallrunning (on a left wall or a right wall)
         {
-            onWall = true;
+            onWall = true; 
         }
         else
         {
             onWall = false;
         }
 
-        if(onWallA)
+        if(onWallA) // If on a left wall
         {
-            while(zRotation != maxRotationL)
+            while(zRotation != maxRotationL) // Loop until the z Rotation of the camera matches the max tilt angle
             {
-                zRotation -= rotationIncrament;
+                zRotation -= rotationIncrament; // Incraments the camera z tilt by the specified ammount
             }
         }
 
-        if (onWallB)
+        if (onWallB) // If on a right wall
         {
-            while (zRotation != maxRotationR)
+            while (zRotation != maxRotationR) // Loop until the x Rotation of the camera matches the max tilt angle
             {
-                zRotation += rotationIncrament;
+                zRotation += rotationIncrament; // Incraments the camera z tilt by the specified ammount
             }
         }
 
-        if(onWall == false)
+        if(onWall == false) // If not wallrunning
         {
-            if(zRotation < 0)
+            if(zRotation < 0) // If z rotation is negative
             {
-                zRotation += rotationIncrament;
+                zRotation += rotationIncrament; // Incrament the z camera Rotation up until it is 0
             }
-            else if(zRotation > 0)
+            else if(zRotation > 0) // If the z rotation is positive
             {
-                zRotation -= rotationIncrament;
+                zRotation -= rotationIncrament; // Incrament the z camera Rotation down until it is 0
             }
         }
 
