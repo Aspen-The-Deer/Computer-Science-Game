@@ -1155,6 +1155,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivity: 1000
   playerBody: {fileID: 887179203}
+  wallL: {fileID: 2118456386}
+  wallR: {fileID: 464396906}
+  wallDistance: 0.5
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!81 &1905551474
 AudioListener:
   m_ObjectHideFlags: 0

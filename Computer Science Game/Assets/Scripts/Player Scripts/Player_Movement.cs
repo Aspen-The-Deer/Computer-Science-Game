@@ -7,7 +7,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 {
     public CharacterController controller; // Creating a public variable that defines which game object is the character controller
 
-    public float speed = 12f; // Creating a public float that defines the speed of the player character
+    public float speed = 15f; // Creating a public float that defines the speed of the player character
     public float gravity = -9.81f; // Creating a public float that defines the strength of gravity on the player character
     public float jumpHeight = 2f; // Creating a public float that defines the height at which the player can jump
     public int jumpsRemaining = 1; // Creating a public integer that defines the number of times the player is able to jump before returning to the ground 
@@ -23,8 +23,8 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 
     Vector3 velocity; // Defines a vector movement that connects to the velocity of the player
     bool onFloor; // Defines a boolean that indicates if the player is touching the ground
-    bool onWallA;
-    bool onWallB;
+    bool onWallA; // Defines a boolean that indicates if the player is touching the wall
+    bool onWallB; // Defines a boolean that indicates if the player is touching the wall
 
     // Update is called once per frame
     void Update()
@@ -33,15 +33,15 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask);
         onFloor = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if(onWallA && velocity.y <0)
+        if(onWallA && velocity.y < 0)
         {
-            velocity.y = -2f;
+            velocity.y = -1f;
             jumpsRemaining = 2;
         }
 
         if (onWallB && velocity.y < 0)
         {
-            velocity.y = -2f;
+            velocity.y = -1f;
             jumpsRemaining = 2;
         }
 
