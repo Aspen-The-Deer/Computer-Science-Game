@@ -29,48 +29,48 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     // Update is called once per frame
     void Update()
     {
-        onWallA = Physics.CheckSphere(wallL.position, wallDistance, wallMask);
-        onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask);
-        onFloor = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        onWallA = Physics.CheckSphere(wallL.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
+        onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
+        onFloor = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask); // Creates a 'Check Sphere' around an empty game object to detect the floor when within range of the player
 
-        if(onWallA && velocity.y < 0)
+        if(onWallA && velocity.x < 0) // If the player is on a left hand wall, and their velocity is greater than 0
         {
-            velocity.y = -1f;
-            jumpsRemaining = 2;
+            velocity.y = -1f; // Minimises player gravity when wall running to allow the player to stay on the wall
+            jumpsRemaining = 2; // Resets the player jump counter for when coming off the wall
         }
 
-        if (onWallB && velocity.y < 0)
+        if (onWallB && velocity.x < 0) // If the player is on a right hand wall, and their velocity is greater than 0
         {
-            velocity.y = -1f;
-            jumpsRemaining = 2;
+            velocity.y = -1f; // Minimises player gravity when wall running to allow the player to stay on the wall
+            jumpsRemaining = 2; // Resets the player jump counter for when coming off the wall
         }
 
-        if (onFloor && velocity.y < 0)
+        if (onFloor && velocity.y < 0) // If the player is on the floor, and their velocity is 0
         {
-            velocity.y = -2f;
+            velocity.y = -2f; // Applies a slight downward force to the player to keep them correctly grounded
         }
 
-        float xMove = Input.GetAxis("Horizontal");
-        float zMove = Input.GetAxis("Vertical");
+        float xMove = Input.GetAxis("Horizontal"); // Movement across the X axis defined by the horizontal movement input
+        float zMove = Input.GetAxis("Vertical"); // Movement across the Z axis defined by the vertical movement input
 
-        Vector3 move = transform.right * xMove + transform.forward * zMove;
+        Vector3 move = transform.right * xMove + transform.forward * zMove; // Converts the movement input into a 3D vector named 'Move'
 
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * speed * Time.deltaTime); // Applies the movement vector to the character controller, multiplying by speed to determine how fast to move
 
-        if(Input.GetButtonDown("Jump") && (jumpsRemaining > 0))
+        if(Input.GetButtonDown("Jump") && (jumpsRemaining > 0)) // If 'Space' is pressed, and there are more than 0 jumps remaining
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            jumpsRemaining -= 1;
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); // A math calculation to calculate the jump height of the player based on preset values
+            jumpsRemaining -= 1; // Removes 1 from jumps remaining
         }
 
-        if(onFloor)
+        if(onFloor) 
         {
-            jumpsRemaining = 1;
+            jumpsRemaining = 1; // Resets the number of jumps remaining for the player when they touch the ground again
         }
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += gravity * Time.deltaTime; // Calculation to determine acceleration under the current gravity over time
 
-        controller.Move(velocity * Time.deltaTime);
+        controller.Move(velocity * Time.deltaTime); // Calculation for moving the character controller based on current
 
     }
 }
