@@ -43,6 +43,12 @@ public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' 
         xRotation -= mouseY; // -= mouseY to give correct rotation (Not inverted)
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Locks the camera movement on the Y axis to a 180 degree span
 
+        xRotation -= mouseY; // -= mouseY to give correct rotation (Not inverted)
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Locks the camera movement on the Y axis to a 180 degree span        
+
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, zRotation); // Mathmatic function to calculate player rotation on the X axis
+        playerBody.Rotate(Vector3.up * mouseX); // Mathmatic function to call in mouse movement calculations for conversion into a player rotation
+        
         onWallA = Physics.CheckSphere(wallL.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
         onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
 
@@ -59,7 +65,7 @@ public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' 
         {
             while(zRotation != maxRotationL) // Loop until the z Rotation of the camera matches the max tilt angle
             {
-                zRotation -= rotationIncrament; // Incraments the camera z tilt by the specified ammount
+                zRotation -= (rotationIncrament); // Incraments the camera z tilt by the specified ammount
             }
         }
 
@@ -82,12 +88,5 @@ public class Mouse_Look : MonoBehaviour // Creating a public class 'Mouse_Look' 
                 zRotation -= rotationIncrament; // Incrament the z camera Rotation down until it is 0
             }
         }
-
-        xRotation -= mouseY; // -= mouseY to give correct rotation (Not inverted)
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Locks the camera movement on the Y axis to a 180 degree span        
-
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, zRotation); // Mathmatic function to calculate player rotation on the X axis
-        playerBody.Rotate(Vector3.up * mouseX); // Mathmatic function to call in mouse movement calculations for conversion into a player rotation
-
     }
 }
