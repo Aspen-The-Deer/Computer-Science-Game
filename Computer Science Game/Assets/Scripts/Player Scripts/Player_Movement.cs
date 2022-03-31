@@ -107,6 +107,26 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         Vector3 targetCentre = crouching ? standingCentre : crouchingCentre;
         Vector3 currentCentre = controller.center;
         float targetSpeed = crouching ? defaultSpeed : crouchingSpeed;
+
+        while (timeSince < timeToCrouch)
+        {
+            controller.height = Mathf.Lerp(currentHeight, targetHeight, timeSince / timeToCrouch);
+            controller.center = Vector3.Lerp(currentCentre, targetCentre, timeSince / timeToCrouch);
+            timeSince += Time.deltaTime;
+            yield return null;
+        }
+
+        controller.center = targetCentre;
+        controller.height = targetHeight;
+
+        crouching = !crouching;
+
+        crouchAnimation = false;
+    }
+    
+    private IEnumerator toCrouchSpeed()
+    {
+        float targetSpeed = crouching ? defaultSpeed : crouchingSpeed;
         float currentSpeed;
         if (!crouching)
         {
@@ -114,21 +134,12 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         }
         else currentSpeed = crouchingSpeed;
 
-        while (timeSince < timeToCrouch)
+        while (timeSince < timeToCrouchSpeed)
         {
-            controller.height = Mathf.Lerp(currentHeight, targetHeight, timeSince / timeToCrouch);
-            controller.center = Vector3.Lerp(currentCentre, targetCentre, timeSince / timeToCrouch);
             speed = Mathf.Lerp((defaultSpeed + 5), targetSpeed, timeSince / timeToCrouchSpeed);
             timeSince += Time.deltaTime;
             yield return null;
         }
 
-        controller.center = targetCentre;
-        controller.height = targetHeight;
-        speed = targetSpeed;
-
-        crouching = !crouching;
-
-        crouchAnimation = false;
+        speed = targetSpeed; 
     }
-}
