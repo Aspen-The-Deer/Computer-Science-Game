@@ -90,6 +90,11 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         {
             StartCoroutine(toCrouch());
         }
+        
+        if (Input.GetButtonDown("Crouch") && !crouchAnimation)
+        {
+            StartCoroutine(toCrouchSpeed());
+        }
 
         velocity.y += gravity * Time.deltaTime; // Calculation to determine acceleration under the current gravity over time
 
