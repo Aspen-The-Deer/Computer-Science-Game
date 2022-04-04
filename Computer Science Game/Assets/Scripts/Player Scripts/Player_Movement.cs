@@ -7,8 +7,8 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 {
     public CharacterController controller; // Creating a public variable that defines which game object is the character controller
 
-    public float defaultSpeed = 15f; // Creating a public float that defines the speed of the player character
-    public float crouchingSpeed = 10f;
+    public float defaultSpeed = 20f; // Creating a public float that defines the speed of the player character
+    public float crouchingSpeed = 15f;
     public float speed;
     public float gravity = -9.81f; // Creating a public float that defines the strength of gravity on the player character
     public float jumpHeight = 3f; // Creating a public float that defines the height at which the player can jump
@@ -29,14 +29,15 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     bool onWallA; // Defines a boolean that indicates if the player is touching the wall
     bool onWallB; // Defines a boolean that indicates if the player is touching the wall
 
-    public bool crouching;
-    bool crouchAnimation;
-    float standingHeight = 2f;
-    float crouchingHeight = 0.25f;
-    Vector3 standingCentre = new Vector3(0, 0, 0);
-    Vector3 crouchingCentre = new Vector3(0, 0.5f, 0);
-    float timeToCrouch = 0.25f;
-    float timeToCrouchSpeed = 4f;
+    public bool crouching; // Defines a boolean that indicates if the player is crouching
+    public bool crouching2; // Defines a boolean that indicates if the player is crouching (alternate)
+    public bool crouchAnimation; // Defines a boolean that indicates if the player is in the crouching animation
+    float standingHeight = 2f; // Defines the standing height of the player
+    float crouchingHeight = 0.25f; // Defines the crouching height of the player
+    Vector3 standingCentre = new Vector3(0, 0, 0); // Defines a set of local coordinates which works as the centre of the player model when standing
+    Vector3 crouchingCentre = new Vector3(0, 0.5f, 0); // Defines a set of local coordinates which works as the centre of the player model when crouching
+    float timeToCrouch = 0.125f; // Defines how long the transition between standing and crouching will take
+    public float timeToCrouchSpeed = 1.5f; // Defines how long the transition between walking speed and crouching speed will take
 
     // Update is called once per frame
     void Update()
@@ -49,15 +50,15 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         {
             onFloor = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask); // Creates a 'Check Sphere' around an empty game object to detect the floor when within range of the player;
         }
-        else onFloor = Physics.CheckSphere(crouchingGroundCheck.position, groundDistance, groundMask)  ; // Creates a 'Check Sphere' around an empty game object to detect the floor when within range of the player
+        else onFloor = Physics.CheckSphere(crouchingGroundCheck.position, groundDistance, groundMask); // Creates a 'Check Sphere' around an empty game object to detect the floor when within range of the player
 
-        if(onWallA & !onFloor & !Input.GetButtonDown("Jump")) // If the player is on a left hand wall, and their velocity is greater than 0
+        if (onWallA & !onFloor & !Input.GetButtonDown("Jump") & !crouching) // If the player is on a left hand wall, and their velocity is greater than 0
         {
             velocity.y = -1f; // Minimises player gravity when wall running to allow the player to stay on the wall
             jumpsRemaining = 2; // Resets the player jump counter for when coming off the wall
         }
 
-        if (onWallB & !onFloor & !Input.GetButtonDown("Jump")) // If the player is on a right hand wall, and their velocity is greater than 0
+        if (onWallB & !onFloor & !Input.GetButtonDown("Jump") & !crouching) // If the player is on a right hand wall, and their velocity is greater than 0
         {
             velocity.y = -1f; // Minimises player gravity when wall running to allow the player to stay on the wall
             jumpsRemaining = 2; // Resets the player jump counter for when coming off the wall
@@ -80,21 +81,35 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); // A math calculation to calculate the jump height of the player based on preset values
             jumpsRemaining -= 1; // Removes 1 from jumps remaining
         }
+        else if (Input.GetButtonDown("Jump") && (jumpsRemaining > 0) && crouching && !crouchAnimation) // If 'Space is pressed, and the player is crouching
+        {
+            StartCoroutine(toCrouch()); // Calls a routine responsible for toggling the crouch state for the player model
+            StartCoroutine(toCrouchSpeed()); // Calls a routine responsible for toggling the crouch state for the player speed
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); // A math calculation to calculate the jump height of the player based on preset values
+            jumpsRemaining -= 1; // Removes 1 from jumps remaining
+        }
 
-        if(onFloor) 
+            if (onFloor)
         {
             jumpsRemaining = 1; // Resets the number of jumps remaining for the player when they touch the ground again
         }
 
-        if (Input.GetButtonDown("Crouch") && !crouchAnimation)
+        if (Input.GetButtonDown("Crouch") && !crouchAnimation && onFloor) // If the 'C' key is pressed, and the player is grounded
         {
-            StartCoroutine(toCrouch());
+            StartCoroutine(toCrouch()); // Calls a routine responsible for toggling the crouch state for the player model
+            StartCoroutine(toCrouchSpeed()); // Calls a routine responsible for toggling the crouch state for the player speed
         }
-        
-        if (Input.GetButtonDown("Crouch") && !crouchAnimation)
+
+        if (!crouching) // if the player is not crouching
         {
-            StartCoroutine(toCrouchSpeed());
+            speed = defaultSpeed; // Set speed to its default
         }
+
+        if (!crouching2) // If the player is not crouching
+        {
+            timeToCrouchSpeed = 1.5f; // Set the multiplier for crouch speed change to 1.5s
+        }
+        else timeToCrouchSpeed = 0f; // Set the multiplier for crouch speed change to be instant
 
         velocity.y += gravity * Time.deltaTime; // Calculation to determine acceleration under the current gravity over time
 
@@ -104,47 +119,51 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 
     private IEnumerator toCrouch()
     {
-        crouchAnimation = true;
+        crouchAnimation = true; // Indecates the beginning of the transition between standing and crouching
 
-        float timeSince = 0;
-        float targetHeight = crouching ? standingHeight : crouchingHeight;
-        float currentHeight = controller.height;
-        Vector3 targetCentre = crouching ? standingCentre : crouchingCentre;
-        Vector3 currentCentre = controller.center;
-        float targetSpeed = crouching ? defaultSpeed : crouchingSpeed;
+        float timeSince = 0; // Defines a float variable used to calculate time passed
+        float targetHeight = crouching ? standingHeight : crouchingHeight; // Defines a float for the players target height depending on if they are crouching or not
+        float currentHeight = controller.height; // Takes the current height of the controller as a float
+        Vector3 targetCentre = crouching ? standingCentre : crouchingCentre; // Defines a float for the players target centre depending on if they are crouching or not
+        Vector3 currentCentre = controller.center; // Takes the current centre of the controller as a float
 
-        while (timeSince < timeToCrouch)
+        while (timeSince < timeToCrouch) // While the time passed is less than the allocated
         {
-            controller.height = Mathf.Lerp(currentHeight, targetHeight, timeSince / timeToCrouch);
-            controller.center = Vector3.Lerp(currentCentre, targetCentre, timeSince / timeToCrouch);
-            timeSince += Time.deltaTime;
+            controller.height = Mathf.Lerp(currentHeight, targetHeight, timeSince / timeToCrouch); // Over the allocated time, translate the current height from current to target
+            controller.center = Vector3.Lerp(currentCentre, targetCentre, timeSince / timeToCrouch); // Over the allocated time, translate the current centre from current to target
+            timeSince += Time.deltaTime; // Incraments the time passed by how much time has passed
             yield return null;
         }
 
-        controller.center = targetCentre;
-        controller.height = targetHeight;
+        controller.center = targetCentre; // Ensures the centre is correctly set to the target
+        controller.height = targetHeight; // Ensures the height is correctly set to the target
 
-        crouching = !crouching;
+        crouching = !crouching; // Flips the value of the couching bool
 
-        crouchAnimation = false;
+        crouchAnimation = false; // Indecates the end of the transition between standing and crouching
     }
-    
+
     private IEnumerator toCrouchSpeed()
     {
-        float targetSpeed = crouching ? defaultSpeed : crouchingSpeed;
-        float currentSpeed;
-        if (!crouching)
-        {
-            currentSpeed = (defaultSpeed + 10);
-        }
-        else currentSpeed = crouchingSpeed;
+        float timeSince1 = 0; // Defines a float variable used to calculate time passed
+        float targetSpeed = crouching ? defaultSpeed : crouchingSpeed; // Defines a float for the players target speed depending on if they are crouching or not
+        float currentSpeed; // Creates an empty float value for the players current speed
 
-        while (timeSince < timeToCrouchSpeed)
+        if (!crouching2) // If not crouching
         {
-            speed = Mathf.Lerp((defaultSpeed + 5), targetSpeed, timeSince / timeToCrouchSpeed);
-            timeSince += Time.deltaTime;
+            currentSpeed = (defaultSpeed + 10); // Current speed is set to equal the default + a boost
+        }
+        else currentSpeed = crouchingSpeed; // If crouching, current speed is set to equal the crouching speed
+
+        while (timeSince1 < timeToCrouchSpeed) // While the time passed is less than the allocated
+        {
+            speed = Mathf.Lerp(currentSpeed, targetSpeed, timeSince1 / timeToCrouchSpeed); // Over the allocated time, translate the current speed from current to target
+            timeSince1 += Time.deltaTime; // Incraments the time passed by how much time has passed
             yield return null;
         }
 
-        speed = targetSpeed; 
+        speed = targetSpeed; // Ensures the speed is correctly set to the target
+
+        crouching2 = !crouching2; // Flips the value of the couching2 bool
     }
+}

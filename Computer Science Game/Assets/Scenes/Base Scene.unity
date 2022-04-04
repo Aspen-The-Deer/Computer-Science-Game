@@ -491,9 +491,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 887179202}
-  defaultSpeed: 15
-  crouchingSpeed: 10
-  speed: 15
+  defaultSpeed: 20
+  crouchingSpeed: 15
+  speed: 20
   gravity: -19.62
   jumpHeight: 4
   jumpsRemaining: 2
@@ -510,6 +510,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   crouching: 0
+  crouching2: 0
+  crouchAnimation: 0
+  timeToCrouchSpeed: 2
 --- !u!1 &925573637
 GameObject:
   m_ObjectHideFlags: 0
