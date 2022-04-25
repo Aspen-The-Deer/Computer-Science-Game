@@ -13,6 +13,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     public float gravity = -9.81f; // Creating a public float that defines the strength of gravity on the player character
     public float jumpHeight = 3f; // Creating a public float that defines the height at which the player can jump
     public int jumpsRemaining = 1; // Creating a public integer that defines the number of times the player is able to jump before returning to the ground 
+    public float altitude;
 
     public Transform groundCheck; // Creates a transformation that can be defined as an in game object used for ground checking
     public Transform crouchingGroundCheck;
@@ -39,9 +40,20 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     float timeToCrouch = 0.125f; // Defines how long the transition between standing and crouching will take
     public float timeToCrouchSpeed = 1.5f; // Defines how long the transition between walking speed and crouching speed will take
 
+    public bool airDash = false;
+    public float dashCooldown = 0;
+
     // Update is called once per frame
     void Update()
     {
+        altitude = transform.position.y;
+
+        if (altitude < -15)
+        {
+            controller.enabled = false;
+            controller.transform.position = new Vector3(0, 0.4f, 0);
+            controller.enabled = true;
+        }
 
         onWallA = Physics.CheckSphere(wallL.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
         onWallB = Physics.CheckSphere(wallR.position, wallDistance, wallMask); // Creates a 'Check Sphere' around an empty game object to detect a wall within range of the player
@@ -66,7 +78,8 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 
         if (onFloor && velocity.y < 0) // If the player is on the floor, and their velocity is 0
         {
-            velocity.y = -2f; // Applies a slight downward force to the player to keep them correctly grounded
+            velocity.y = -2; // Applies a slight downward force to the player to keep them correctly grounded
+            dashCooldown = 1;
         }
 
         float xMove = Input.GetAxis("Horizontal"); // Movement across the X axis defined by the horizontal movement input
@@ -100,7 +113,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
             StartCoroutine(toCrouchSpeed()); // Calls a routine responsible for toggling the crouch state for the player speed
         }
 
-        if (!crouching) // if the player is not crouching
+        if (!crouching && !airDash) // if the player is not crouching
         {
             speed = defaultSpeed; // Set speed to its default
         }
@@ -115,6 +128,15 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 
         controller.Move(velocity * Time.deltaTime); // Calculation for moving the character controller based on velocity, using delta time to prevent different FPS affecting speed
 
+        if (Input.GetButtonDown("Special") && !onFloor && (!onWallA && !onWallB) && dashCooldown > 0)
+        {
+            airDash = true;
+            dashCooldown = 0;
+            StartCoroutine(airDashSpeed());
+            airDash = false;
+        }
+
+       
     }
 
     private IEnumerator toCrouch()
@@ -166,4 +188,19 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 
         crouching2 = !crouching2; // Flips the value of the couching2 bool
     }
-}
+
+    private IEnumerator airDashSpeed()
+    {
+        float timeSince2 = 0;
+        float dashTime = 0.1f;
+        while (timeSince2 < dashTime)
+        {
+            speed = Mathf.Lerp(speed, 200, timeSince2 / dashTime);
+            timeSince2 += Time.deltaTime;
+            yield return null;
+        }
+
+
+    }
+
+    }
