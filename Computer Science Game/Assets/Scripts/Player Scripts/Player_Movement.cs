@@ -131,8 +131,8 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         if (Input.GetButtonDown("Special") && !onFloor && (!onWallA && !onWallB) && dashCooldown > 0)
         {
             airDash = true;
-            dashCooldown = 0;
-            StartCoroutine(airDashSpeed());
+            dashCooldown = 0; // Puts the Air Dash ability on cooldown
+            StartCoroutine(airDashSpeed()); // Calls a subroutine that allows for the ability to run
             airDash = false;
         }
 
@@ -191,16 +191,14 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
 
     private IEnumerator airDashSpeed()
     {
-        float timeSince2 = 0;
-        float dashTime = 0.1f;
-        while (timeSince2 < dashTime)
+        float timeSince2 = 0; // Defines a float variable used to calculate time passed
+        float dashTime = 0.1f; // Defines how fast the transition from normal speed to boost speed would be
+        while (timeSince2 < dashTime) // While the time passed is less than the allocated
         {
-            speed = Mathf.Lerp(speed, 200, timeSince2 / dashTime);
-            timeSince2 += Time.deltaTime;
+            speed = Mathf.Lerp(speed, 200, timeSince2 / dashTime);  // Over the allocated time, translate the current speed from current to target
+            timeSince2 += Time.deltaTime;  // Incraments the time passed by how much time has passed
             yield return null;
         }
-
-
     }
 
     }
