@@ -226,7 +226,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
             }
             else
             {
-                velocity.y = 0;
+                velocity.y = rbVy;
             }
                 this.GetComponent<Rigidbody>().useGravity = false;
             swingingExit = false;
