@@ -220,8 +220,15 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         if((grounded || (onWallA || onWallB) || onSlope || jumping || moving) && !swinging && swingingExit)
         {
             controller.enabled = true;
-            velocity.y = 0;
-            this.GetComponent<Rigidbody>().useGravity = false;
+            if (jumping)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+            else
+            {
+                velocity.y = 0;
+            }
+                this.GetComponent<Rigidbody>().useGravity = false;
             swingingExit = false;
         }
        
