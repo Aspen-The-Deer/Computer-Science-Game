@@ -26,7 +26,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     public LayerMask wallMask; // Defines a layer mask that will be an identifier for wall objects
 
     Vector3 velocity; // Defines a vector movement that connects to the velocity of the player
-    bool onFloor; // Defines a boolean that indicates if the player is touching the ground
+    public bool onFloor; // Defines a boolean that indicates if the player is touching the ground
     bool onWallA; // Defines a boolean that indicates if the player is touching the wall
     bool onWallB; // Defines a boolean that indicates if the player is touching the wall
 
@@ -43,9 +43,48 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
     public bool airDash = false;
     public float dashCooldown = 0;
 
+    Vector3 hitNormal;
+    public bool onSlope;
+    public float hitAngle;
+    public float slideSpeed = 15f;
+
+    private Rigidbody rb;
+    RaycastHit hit;
+    public float maxDistance = 100;
+    public LayerMask whatCanGrapple;
+    public new Transform camera;
+    public bool swinging;
+    public bool swingingExit;
+
+    public bool jumping;
+    public bool moving;
+    public bool grounded;
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        hitNormal = hit.normal;
+    }
+
     // Update is called once per frame
     void Update()
     {
+
+
+        hitAngle = Vector3.Angle(Vector3.up, hitNormal);
+        onSlope = (hitAngle > 45 & hitAngle < 88);
+
+        if (onSlope)
+        {
+            velocity.y += (gravity * 2);
+            velocity.x = ((1f - hitNormal.y) * hitNormal.x) * slideSpeed;
+            velocity.z = ((1f - hitNormal.y) * hitNormal.z) * slideSpeed;
+        }
+        else
+        {
+            velocity.x = 0f;
+            velocity.z = 0f;
+        }
+
         altitude = transform.position.y;
 
         if (altitude < -15)
@@ -102,7 +141,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
             jumpsRemaining -= 1; // Removes 1 from jumps remaining
         }
 
-            if (onFloor)
+        if (onFloor)
         {
             jumpsRemaining = 1; // Resets the number of jumps remaining for the player when they touch the ground again
         }
@@ -136,8 +175,78 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
             airDash = false;
         }
 
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumping = true;
+        }
+
+        if (Input.GetButtonUp("Jump"))
+        {
+            jumping = false;
+        }
+
+        if (Input.GetButtonDown("Horizontal") | Input.GetButtonDown("Vertical"))
+        {
+            moving = true;
+        }
+
+        if (Input.GetButtonUp("Horizontal") | Input.GetButtonUp("Vertical"))
+        {
+            moving = false;
+        }
+
+        grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        rb = this.GetComponent<Rigidbody>();
+        Vector3 velocityTrans = rb.velocity;
+        float rbVx = rb.velocity.x;
+        float rbVy = rb.velocity.y;
+        float rbVz = rb.velocity.z;
+
+
+        if (Input.GetButtonDown("Fire2") & Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatCanGrapple))
+        {
+            swinging = true;
+            controller.enabled = false;
+            this.GetComponent<Rigidbody>().useGravity = true;
+        }
+
+        if (Input.GetButtonUp("Fire2"))
+        {
+            swinging = false;
+            swingingExit = true;
+        }
+
+        if((grounded || (onWallA || onWallB) || onSlope || jumping || moving) && !swinging && swingingExit)
+        {
+            controller.enabled = true;
+            velocity.y = 0;
+            this.GetComponent<Rigidbody>().useGravity = false;
+            swingingExit = false;
+        }
        
+
+        if (controller.enabled == false)
+        {
+            onFloor = true;
+            if(rbVx < 20 & rbVx > -20 & rbVy < 20 & rbVy > -20 & rbVz < 20 & rbVz > -20)
+            {
+                rb.velocity += new Vector3((rb.velocity.x / 2000), (rb.velocity.y / 2000), (rb.velocity.z / 2000));
+            }
+            
+        }
+
     }
+
+    private void LateUpdate()
+    {
+        if (controller.enabled == true)
+        {
+            Vector3 zeroVelocity = new Vector3(0, 0, 0);
+            this.GetComponent<Rigidbody>().velocity = zeroVelocity;
+        }
+    }
+
 
     private IEnumerator toCrouch()
     {

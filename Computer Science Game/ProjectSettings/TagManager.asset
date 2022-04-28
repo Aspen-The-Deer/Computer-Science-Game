@@ -15,9 +15,9 @@ TagManager:
   - Wall
   - SWall
   - Trap
-  - Reset
-  - 
-  - 
+  - Player
+  - Enemy
+  - Grapple Surface
   - 
   - 
   - 
