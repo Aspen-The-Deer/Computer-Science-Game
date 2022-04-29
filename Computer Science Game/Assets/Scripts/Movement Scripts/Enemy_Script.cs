@@ -19,6 +19,8 @@ public class Enemy_Script : MonoBehaviour
     public float projectileDetectDistance = 2f;
     public LayerMask projectileMask;
 
+    public float health = 100;
+    public bool damageTaken = true;
     GameObject self;
 
     // Start is called before the first frame update
@@ -42,12 +44,24 @@ public class Enemy_Script : MonoBehaviour
             enemy.velocity = transform.forward * enemySpeed;
         }
 
+        if (!projectileInRange)
+        {
+            damageTaken = false;
+        }
+
         projectileInRange = Physics.CheckSphere(projectileCheck.position, projectileDetectDistance, projectileMask);
-        if (projectileInRange)
+        if (projectileInRange && !damageTaken)
+        {
+            health -= Random.Range(15,20);
+            damageTaken = true;
+        }
+    }
+    private void LateUpdate()
+    {
+        if (health <= 0)
         {
             self = this.gameObject;
             Destroy(self);
         }
-
     }
 }

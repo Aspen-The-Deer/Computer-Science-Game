@@ -237,7 +237,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         if (controller.enabled == false)
         {
             onFloor = true;
-            if(rbVx < 20 & rbVx > -20 & rbVy < 20 & rbVy > -20 & rbVz < 20 & rbVz > -20)
+            if((rbVx < 20 & rbVx > -20 & rbVy < 20 & rbVy > -20 & rbVz < 20 & rbVz > -20) && swinging)
             {
                 rb.velocity += new Vector3((rb.velocity.x / 2000), (rb.velocity.y / 2000), (rb.velocity.z / 2000));
             }

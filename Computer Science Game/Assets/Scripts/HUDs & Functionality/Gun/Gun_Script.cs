@@ -10,15 +10,17 @@ public class Gun_Script : MonoBehaviour
     public Transform gunTip;
     public new Camera camera;
     public float projForce, upForce;
-    public float fireRate = 0.1f;
+    public float fireRate = 0.5f;
     public float ammo = 10;
     public bool readyToShoot = true;
     public bool reloading = false;
     public bool allowInvoke = true;
 
+    public Ammo_Count ammoCount;
+
     void Update()
     {
-        if (Input.GetButton("Fire1") && readyToShoot && ammo > 0 && !reloading)
+        if (Input.GetButton("Fire1") && readyToShoot && ammo > 0 && !reloading && !Input.GetButton("Fire2"))
         {
             fireGun();
         }
@@ -32,6 +34,7 @@ public class Gun_Script : MonoBehaviour
         {
             StartCoroutine(reload());
         }
+        ammoCount.setAmmo((int)ammo);
     }
 
     void fireGun()
@@ -62,6 +65,7 @@ public class Gun_Script : MonoBehaviour
             Invoke("FireRate", fireRate);
             allowInvoke = false;
         }
+
     }
 
     private void FireRate()
@@ -74,7 +78,7 @@ public class Gun_Script : MonoBehaviour
     {
         readyToShoot = false;
         reloading = true;
-        float reloadTime = 4;
+        float reloadTime = 2;
         float timeSince = 0;
 
         while (timeSince < reloadTime) // While the time passed is less than the allocated
