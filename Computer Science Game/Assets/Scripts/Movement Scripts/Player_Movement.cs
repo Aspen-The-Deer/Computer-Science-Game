@@ -215,6 +215,7 @@ public class Player_Movement : MonoBehaviour // Creating a public class 'Player_
         {
             swinging = false;
             swingingExit = true;
+            jumpsRemaining = 2;
         }
 
         if((grounded || (onWallA || onWallB) || onSlope || jumping || moving) && !swinging && swingingExit)
