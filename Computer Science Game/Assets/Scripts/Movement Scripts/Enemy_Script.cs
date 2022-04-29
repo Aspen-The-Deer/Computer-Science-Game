@@ -14,10 +14,6 @@ public class Enemy_Script : MonoBehaviour
     public LayerMask playerMask; // Defines a layer mask that will be an identifier for player objects
     public bool playerInRange;
 
-    public Transform playerDamageCheck;
-    public bool playerInDamageRange;
-    public float playerDamageDistance = 2f;
-
     public Transform projectileCheck;
     public bool projectileInRange;
     public float projectileDetectDistance = 2f;
@@ -38,7 +34,6 @@ public class Enemy_Script : MonoBehaviour
     {
         enemy.AddForce(Physics.gravity, ForceMode.Acceleration);
         playerInRange = Physics.CheckSphere(playerCheck.position, playerDistance, playerMask);
-        playerInDamageRange = Physics.CheckSphere(playerDamageCheck.position, playerDamageDistance, playerMask);
 
         if (playerInRange)
         {
