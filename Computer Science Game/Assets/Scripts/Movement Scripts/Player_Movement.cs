@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 // ^ Default unity functionality requirements
 
 public class Player_Movement : MonoBehaviour 

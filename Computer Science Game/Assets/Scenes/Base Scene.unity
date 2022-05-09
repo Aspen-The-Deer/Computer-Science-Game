@@ -1245,7 +1245,6 @@ MonoBehaviour:
   gunTip: {fileID: 324270380}
   camera: {fileID: 1905551475}
   projForce: 50
-  upForce: 0
   fireRate: 0.5
   ammo: 10
   readyToShoot: 1
@@ -3576,9 +3575,9 @@ MonoBehaviour:
   defaultSpeed: 15
   crouchingSpeed: 10
   speed: 15
-  gravity: -19.62
   jumpHeight: 4
   jumpsRemaining: 2
+  gravity: -19.62
   altitude: 0
   groundCheck: {fileID: 141097662}
   crouchingGroundCheck: {fileID: 577419615}
@@ -3596,6 +3595,9 @@ MonoBehaviour:
   crouching: 0
   crouching2: 0
   crouchAnimation: 0
+  standingHeight: 2
+  crouchingHeight: 0.25
+  timeToCrouch: 0.125
   timeToCrouchSpeed: 2
   airDash: 0
   dashCooldown: 0
@@ -5463,7 +5465,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 22.677795, y: 137.31302, z: -1337.2144}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1545997242}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5939,8 +5942,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 932119609}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1432267045}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6639,7 +6642,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1905551471
 GameObject:

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Diagnostics;
 // ^ Default unity functionality requirements + UI tools.
 
 public class Health_Bar : MonoBehaviour

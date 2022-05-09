@@ -91,7 +91,7 @@ public class Gun_Script : MonoBehaviour
         }
 
         // A new Vector3 is created which aims the projectile at the target.
-        Vector3 direction = target - gunTip.position;
+         Vector3 direction = target - gunTip.position;
 
         // A new instance of the projectile prefab is created at the tip of the gun.
         GameObject currentProjectile = Instantiate(projectile, gunTip.position, Quaternion.identity);
@@ -142,7 +142,8 @@ public class Gun_Script : MonoBehaviour
         while (timeSince < reloadTime)
         {
             ammo = Mathf.Lerp(ammo, 10, timeSince / reloadTime);
-            timeSince += Time.deltaTime;  
+            timeSince += Time.deltaTime;
+            ammoCount.setAmmo((int)ammo);
             yield return null;
         }
         readyToShoot = true;
