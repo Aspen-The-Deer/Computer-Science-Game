@@ -5,21 +5,34 @@ using UnityEngine;
 
 public class Mouse_Look : MonoBehaviour 
 {
+    // Defines a float value that will be used
+    // as a multiplier for mouse sesnsitivity.
     public float mouseSensitivity = 1000f; 
 
+    // Defines a Transform which can be used
+    // to reference the position stats of the player itself.
     public Transform playerBody;
 
+    // Defines a set of floats which will be
+    // responsible for storing the rotation values for the camera.
     float xRotation = 0f; 
     float zRotation = 0f;
-
+    
+    // Defining Transforms for where the wall run checks will be anchored and
+    // distance from which the player will check for a wall.
+    // A layer mask is also created to determine what surfaces to look for.
     public Transform wallL;
     public Transform wallR;
     public float wallDistance = 0.5f;
     public LayerMask wallMask; 
 
+    // Creates a set of booleans that can be referred to
+    // for the validation of the player's state.
     bool onWallA;
     bool onWallB;
-
+    
+    // A set if variables used to validate the
+    // rotation of the camera when wallrunning.
     float maxRotationL = -10f;
     float maxRotationR = 10f; 
     float rotationIncrament = 0.0625f;

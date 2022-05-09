@@ -47,12 +47,12 @@ public class Player_Movement : MonoBehaviour
     Vector3 velocity;
 
     // Creates a set of booleans that can be referred to
-    // validation of the player's state.
+    // for the validation of the player's state.
     public bool onFloor;
     bool onWallA;
     bool onWallB;
 
-    // Defines a set of variebles that are used to refer to the
+    // Defines a set of variables that are used to refer to the
     // player's current crouching state.
     public bool crouching; 
     public bool crouching2;
