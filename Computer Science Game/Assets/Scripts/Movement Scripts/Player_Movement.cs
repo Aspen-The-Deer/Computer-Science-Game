@@ -137,7 +137,7 @@ public class Player_Movement : MonoBehaviour
         if (altitude < -15)
         {
             controller.enabled = false;
-            controller.transform.position = new Vector3(0, 0.4f, 0);
+            controller.transform.position = new Vector3(0, 4f, 0);
             controller.enabled = true;
         }
 
@@ -317,7 +317,7 @@ public class Player_Movement : MonoBehaviour
             // incrament its velocity by one 2000th of itself. 
             if((rbVx < 20 & rbVx > -20 & rbVy < 20 & rbVy > -20 & rbVz < 20 & rbVz > -20) && swinging)
             {
-                rb.velocity += new Vector3((rb.velocity.x / 2000), (rb.velocity.y / 2000), (rb.velocity.z / 2000));
+                rb.velocity += new Vector3((rb.velocity.x / 400), (rb.velocity.y / 400), (rb.velocity.z / 400));
             }
             
         }

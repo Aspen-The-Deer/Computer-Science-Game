@@ -7,7 +7,7 @@ public class Mouse_Look : MonoBehaviour
 {
     // Defines a float value that will be used
     // as a multiplier for mouse sesnsitivity.
-    public float mouseSensitivity = 1000f; 
+    public float mouseSensitivity = 10; 
 
     // Defines a Transform which can be used
     // to reference the position stats of the player itself.
@@ -35,7 +35,7 @@ public class Mouse_Look : MonoBehaviour
     // rotation of the camera when wallrunning.
     float maxRotationL = -10f;
     float maxRotationR = 10f; 
-    float rotationIncrament = 0.0625f;
+    float rotationIncrament = 5f;
     bool onWall;
 
     // Start is called before the first frame

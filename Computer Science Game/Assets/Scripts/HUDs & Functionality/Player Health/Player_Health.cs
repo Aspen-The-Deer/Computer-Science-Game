@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 // ^ Default unity functionality requirements
 
 public class Player_Health : MonoBehaviour
@@ -26,9 +27,6 @@ public class Player_Health : MonoBehaviour
 
     // Creating a reference to the Health Bar HUD element.
     public Health_Bar healthBar;
-
-    // Creating a reference to itself as a gameobject.
-    GameObject self;
 
     // Update is called once per frame
     private void Update()
@@ -90,10 +88,9 @@ public class Player_Health : MonoBehaviour
     // Start playerDeath function.
     private void playerDeath()
     {
-        // Set the game object self
-        // to the current object and destroy it.
-        self = this.gameObject;
-        Destroy(self);
+        // When the player dies,
+        // they are returned to the main menu.
+        SceneManager.LoadScene(5);
     }
 
     // Start updateBar function.
